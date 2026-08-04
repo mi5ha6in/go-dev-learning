@@ -62,3 +62,102 @@ func TestSplitWords(t *testing.T) {
 		})
 	}
 }
+
+func TestCountWords(t *testing.T) {
+	tests := []struct {
+		name string
+		text string
+		want map[string]int
+	}{
+		{
+			name: "повторяющиеся слова",
+			text: "Go, go! GO.",
+			want: map[string]int{
+				"go": 3,
+			},
+		},
+		{
+			name: "русский текст",
+			text: "Кто-то пришёл, кто-то ушёл.",
+			want: map[string]int{
+				"кто-то": 2,
+				"пришёл": 1,
+				"ушёл":   1,
+			},
+		},
+		{
+			name: "разные слова",
+			text: "Go is simple",
+			want: map[string]int{
+				"go":     1,
+				"is":     1,
+				"simple": 1,
+			},
+		},
+		{
+			name: "пустой текст",
+			text: "",
+			want: map[string]int{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := countWords(tt.text)
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Fatalf(
+					"countWords(%q) = %#v, want %#v",
+					tt.text,
+					got,
+					tt.want,
+				)
+			}
+		})
+	}
+}
+
+func TestMostFrequent(t *testing.T) {
+	tests := []struct {
+		name   string
+		counts map[string]int
+		want   string
+	}{
+		{
+			name: "одно наиболее частое слово",
+			counts: map[string]int{
+				"go":     3,
+				"is":     2,
+				"simple": 1,
+			},
+			want: "go",
+		},
+		{
+			name: "одно слово",
+			counts: map[string]int{
+				"rust": 1,
+			},
+			want: "rust",
+		},
+		{
+			name:   "пустая карта",
+			counts: map[string]int{},
+			want:   "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := mostFrequent(tt.counts)
+
+			if got != tt.want {
+				t.Fatalf(
+					"mostFrequent(%#v) = %q, want %q",
+					tt.counts,
+					got,
+					tt.want,
+				)
+			}
+		})
+	}
+}
